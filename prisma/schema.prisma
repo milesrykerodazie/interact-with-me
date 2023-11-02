@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?    @unique
+  username      String?    @unique @default(nanoid(12))
+  bio           String?
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  userImage     userImage?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  conversationIds String[]       @db.ObjectId
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+
+  seenMessageIds String[]  @db.ObjectId
+  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
+
+  accounts Account[]
+  messages Message[]
+}
+
+model userImage {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  public_id String @unique
+  url       String @default("")
+  userId    String @unique @db.ObjectId
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Conversation {
+  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt              DateTime @default(now())
+  lastMessageAt          DateTime @default(now())
+  name                   String?
+  isGroup                Boolean?
+  groupOwner             String?
+  groupConversationImage String?
+
+  messagesIds String[]  @db.ObjectId
+  messages    Message[]
+
+  userIds    String[]    @db.ObjectId
+  users      User[]      @relation(fields: [userIds], references: [id])
+  groupImage GroupImage?
+}
+
+model GroupImage {
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  public_id         String       @unique
+  url               String       @default("")
+  conversationId    String       @unique @db.ObjectId
+  conversationGroup Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  body         String?
+  image        String?
+  messageImage MessageImage?
+  createdAt    DateTime      @default(now())
+
+  seenIds String[] @db.ObjectId
+  seen    User[]   @relation("Seen", fields: [seenIds], references: [id])
+
+  conversationId String       @db.ObjectId
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  senderId String @db.ObjectId
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model MessageImage {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  public_id String  @unique
+  url       String  @default("")
+  messageId String  @unique @db.ObjectId
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
