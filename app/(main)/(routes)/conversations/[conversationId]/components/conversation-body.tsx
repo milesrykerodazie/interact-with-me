@@ -56,13 +56,39 @@ const ConversationBody: React.FC<ConversationBodaTypes> = ({
       );
     };
 
+    const editedMessageHandler = (updatedMessage: FullMessageType) => {
+      setMessages((current) =>
+        current?.map((message) => {
+          if (message?.id === updatedMessage?.id) {
+            return {
+              ...message,
+              body: updatedMessage?.body,
+            };
+          }
+          return message;
+        })
+      );
+    };
+
+    const removeMessageHandler = (deletedMessage: FullMessageType) => {
+      setMessages((current) => {
+        return [
+          ...current?.filter((message) => message?.id !== deletedMessage?.id),
+        ];
+      });
+    };
+
     pusherClient.bind("messages:new", messageHandler);
     pusherClient.bind("message:update", updateMessageHandler);
+    pusherClient.bind("message:edited", editedMessageHandler);
+    pusherClient.bind("message:removed", removeMessageHandler);
 
     return () => {
       pusherClient.unsubscribe(conversationId);
       pusherClient.unbind("messages:new", messageHandler);
       pusherClient.unbind("message:update", updateMessageHandler);
+      pusherClient.unbind("message:edited", editedMessageHandler);
+      pusherClient.unbind("message:removed", removeMessageHandler);
     };
   }, [conversationId]);
 

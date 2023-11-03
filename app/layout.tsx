@@ -7,7 +7,7 @@ import { ModalProvider } from "@/provider/ModalProvider";
 const font = EB_Garamond({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Simple-Messaging-App",
+  title: "Interact-With-Me",
   description:
     "An app that allows users chat rivately and in a group with ease",
 };
