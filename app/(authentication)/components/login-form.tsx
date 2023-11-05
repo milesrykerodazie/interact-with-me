@@ -37,7 +37,7 @@ const LoginForm = () => {
           height="48"
           width="48"
           className="mx-auto w-auto"
-          src="/images/logo.png"
+          src="https://res.cloudinary.com/dcymjefv8/image/upload/v1699217140/simple_messaging_app/logo-icon_ktg7uo.png"
           alt="Logo"
         />
         <h2

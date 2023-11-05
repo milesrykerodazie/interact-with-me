@@ -214,11 +214,7 @@ const RegisterDetails = () => {
             </div>
           </div>
 
-          <div className="mt-6 flex gap-2">
-            <AuthSocialButton
-              icon={BsGithub}
-              onClick={() => socialAction("github")}
-            />
+          <div className="mt-6 gap-2">
             <AuthSocialButton
               icon={FcGoogle}
               onClick={() => socialAction("google")}
