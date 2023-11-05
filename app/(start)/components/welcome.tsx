@@ -23,7 +23,7 @@ const WelcomePage = () => {
 
       <div className="w-full flex flex-col select-none">
         <h2 className=" text-3xl lg:text-5xl font-bold capitalize text-center mb-3 text-blue-700">
-          Welcome to the simple messaging app
+          Welcome to interact with me
         </h2>
         <span className="mb-3 text-sm md:text-base">
           Streamline your communication with our simple messaging app. Connect
