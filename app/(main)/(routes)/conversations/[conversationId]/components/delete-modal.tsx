@@ -34,7 +34,7 @@ const DeleteModal = () => {
         if (response?.data?.success === true) {
           toast.success(response?.data?.message);
           onClose();
-          router.refresh();
+          router.push("/conversations");
         }
       } catch (error) {
         if (error instanceof axios.AxiosError) {
